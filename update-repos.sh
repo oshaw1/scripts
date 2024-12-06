@@ -120,8 +120,11 @@ getpw () {
 	echo
 }
 
-if [[ $# = 1 && $1 != "" ]]; then
-    projs=${1%/}/
+if [[ $# -ge 1 ]]; then
+    projs=""
+    for arg in "$@"; do
+        projs+="${arg%/}"
+    done 
 else
     projs=$(listProjects)
 fi
