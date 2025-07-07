@@ -123,7 +123,7 @@ getpw () {
 if [[ $# -ge 1 ]]; then
     projs=""
     for arg in "$@"; do
-        projs+="${arg%/}"
+        projs+="${arg%/} "
     done 
 else
     projs=$(listProjects)
