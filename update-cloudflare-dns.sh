@@ -1,11 +1,24 @@
 #!/bin/bash
+if [ -f .cloudflareenv ]; then
+    export $(cat .cloudflareenv | grep -v '^#' | xargs)
+else
+    echo "Error: .cloudflareenv file not found"
+    exit 1
+fi
 
 # Your Cloudflare credentials
-API_TOKEN="HGtxfpkKHkuJ1y1ASnMcrs09QUSd12NAk5-DQrrE"
-ZONE_ID="54f47e43cd92813e9a49af015d7c2b1e"
+API_TOKEN="${CLOUDFLARE_API_TOKEN}"
+ZONE_ID="${CLOUDFLARE_ZONE_ID}"
+echo "Detected api token: ${API_TOKEN}"
+echo "Detected zone ID: ${ZONE_ID}"
 
 # List of records to update
-RECORDS=("oshaw1.dev" "passman.oshaw1.dev" "nettest.oshaw1.dev" "portfolio.oshaw1.dev")
+IFS=',' read -ra RECORDS <<< "${DNS_RECORDS}"
+echo "Number of records detected: ${#RECORDS[@]}"
+echo "All records:"
+for i in "${!RECORDS[@]}"; do
+    echo "  [$i]: '${RECORDS[$i]}'"
+done
 
 # Get current IP
 CURRENT_IP=$(curl -s https://api.ipify.org)
